@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VCM Investor Portal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg-primary: #0a0c10;
+      --bg-secondary: #12151c;
+      --bg-tertiary: #1a1d24;
+      --gold: #d4af55;
+      --gold-dark: #aa8a3d;
+      --text-primary: #e8e6e3;
+      --text-secondary: #a0a0a0;
+      --text-muted: #666;
+      --border: rgba(255,255,255,0.08);
+      --success: #22c55e;
+      --warning: #eab308;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+      border-bottom: 1px solid rgba(212,175,85,0.2);
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    
+    .logo {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    
+    .nav {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    
+    .nav-btn:hover {
+      background: rgba(255,255,255,0.05);
+      color: var(--text-primary);
+    }
+    
+    .nav-btn.active {
+      background: rgba(212,175,85,0.15);
+      color: var(--gold);
+    }
+    
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--bg-primary);
+    }
+    
+    /* Main Content */
+    .main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    
+    .page-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 24px;
+    }
+    
+    /* Cards */
+    .card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    
+    .card-gold {
+      background: linear-gradient(135deg, rgba(212,175,85,0.1) 0%, rgba(212,175,85,0.02) 100%);
+      border-color: rgba(212,175,85,0.3);
+    }
+    
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+    
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .stat-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .stat-card:first-child {
+      background: linear-gradient(135deg, rgba(212,175,85,0.1) 0%, rgba(212,175,85,0.02) 100%);
+      border-color: rgba(212,175,85,0.3);
+    }
+    
+    .stat-icon {
+      font-size: 20px;
+      margin-bottom: 8px;
+    }
+    
+    .stat-value {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 4px;
+    }
+    
+    /* Tables */
+    .table-container {
+      overflow-x: auto;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    
+    th {
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    td {
+      padding: 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    
+    tr:hover {
+      background: rgba(255,255,255,0.02);
+    }
+    
+    /* Buttons */
+    .btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg-primary);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(212,175,85,0.3);
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(212,175,85,0.5);
+      color: var(--gold);
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    
+    .btn-outline:hover {
+      background: rgba(212,175,85,0.1);
+    }
+    
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+    
+    .badge-green {
+      background: rgba(34,197,94,0.15);
+      color: var(--success);
+    }
+    
+    .badge-yellow {
+      background: rgba(234,179,8,0.15);
+      color: var(--warning);
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      gap: 8px;
+    }
+    
+    .quick-action {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .quick-action:hover {
+      background: rgba(212,175,85,0.1);
+    }
+    
+    .quick-action-icon {
+      font-size: 18px;
+    }
+    
+    .quick-action-label {
+      font-size: 13px;
+      flex: 1;
+    }
+    
+    .quick-action-arrow {
+      color: var(--text-muted);
+    }
+    
+    /* Deal Cards */
+    .deal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+    
+    .deal-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .deal-name {
+      font-size: 17px;
+      font-weight: 500;
+    }
+    
+    .deal-meta {
+      display: flex;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .deal-meta span {
+      color: var(--gold);
+    }
+    
+    .deal-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed rgba(212,175,85,0.3);
+      border-radius: 12px;
+      padding: 40px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .upload-zone:hover {
+      border-color: var(--gold);
+      background: rgba(212,175,85,0.05);
+    }
+    
+    .upload-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+    
+    .upload-text {
+      color: var(--gold);
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    
+    .upload-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    /* Form Elements */
+    .form-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: var(--text-primary);
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    
+    .form-input:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+    
+    /* Grid Layouts */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 16px;
+    }
+    
+    /* Hidden sections */
+    .section { display: none; }
+    .section.active { display: block; }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+      
+      .nav {
+        order: 3;
+        width: 100%;
+        overflow-x: auto;
+      }
+      
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .deal-card {
+        grid-template-columns: 1fr;
+      }
+      
+      .deal-actions {
+        justify-content: flex-start;
+      }
+    }
+    
+    /* Login Modal */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .login-modal {
+      background: var(--bg-secondary);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 400px;
+      margin: 20px;
+      text-align: center;
+    }
+    
+    .login-logo {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    
+    .login-title {
+      font-size: 18px;
+      margin-bottom: 24px;
+      color: var(--text-secondary);
+    }
+    
+    .login-modal .form-input {
+      text-align: left;
+    }
+    
+    .login-modal .btn {
+      width: 100%;
+      padding: 14px;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+    
+    .login-footer {
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .login-footer a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Screen (shown first) -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-modal">
+      <div class="login-logo">VITAL CAPITAL MARKETS</div>
+      <div class="login-title">Investor Portal</div>
+      
+      <input type="email" class="form-input" placeholder="Email Address" id="loginEmail">
+      <input type="password" class="form-input" placeholder="Password" id="loginPassword">
+      
+      <button class="btn" onclick="handleLogin()">Sign In</button>
+      
+      <div class="login-footer">
+        Don't have an account? <a href="#" onclick="showRegister()">Request Access</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" style="display: none;">
+    <header class="header">
+      <div class="logo">VITAL CAPITAL MARKETS</div>
+      <nav class="nav">
+        <button class="nav-btn active" data-section="dashboard">Dashboard</button>
+        <button class="nav-btn" data-section="deals">Deals</button>
+        <button class="nav-btn" data-section="portfolio">Portfolio</button>
+        <button class="nav-btn" data-section="documents">Documents</button>
+        <button class="nav-btn" data-section="messages">Messages</button>
+      </nav>
+      <div class="user-avatar" id="userAvatar">KS</div>
+    </header>
+
+    <main class="main">
+      <!-- Dashboard Section -->
+      <section class="section active" id="dashboard">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+          <div>
+            <h1 class="page-title">Welcome back, <span id="userName">Investor</span></h1>
+            <p class="page-subtitle">Here's your portfolio overview</p>
+          </div>
+          <button class="btn" onclick="showSection('deals')">View New Opportunities →</button>
+        </div>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">💎</div>
+            <div class="stat-value">$250,000</div>
+            <div class="stat-label">Total Invested</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">📈</div>
+            <div class="stat-value">$299,500</div>
+            <div class="stat-label">Current Value</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">✨</div>
+            <div class="stat-value" style="color: var(--success);">+19.8%</div>
+            <div class="stat-label">Total ROI</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">💰</div>
+            <div class="stat-value">$26,750</div>
+            <div class="stat-label">Distributions</div>
+          </div>
+        </div>
+        
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-title">Active Investments</h3>
+            <div class="table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Property</th>
+                    <th>Invested</th>
+                    <th>Current Value</th>
+                    <th>ROI</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr onclick="showSection('portfolio')" style="cursor: pointer;">
+                    <td>Logistics Hub - Atlanta</td>
+                    <td>$150,000</td>
+                    <td>$187,500</td>
+                    <td style="color: var(--success);">+25%</td>
+                  </tr>
+                  <tr onclick="showSection('portfolio')" style="cursor: pointer;">
+                    <td>Office Complex - Denver</td>
+                    <td>$100,000</td>
+                    <td>$112,000</td>
+                    <td style="color: var(--success);">+12%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3 class="card-title">Quick Actions</h3>
+            <div class="quick-actions">
+              <div class="quick-action" onclick="showSection('deals')">
+                <span class="quick-action-icon">📅</span>
+                <span class="quick-action-label">Schedule a Call</span>
+                <span class="quick-action-arrow">→</span>
+              </div>
+              <div class="quick-action" onclick="showSection('documents')">
+                <span class="quick-action-icon">📄</span>
+                <span class="quick-action-label">Upload Documents</span>
+                <span class="quick-action-arrow">→</span>
+              </div>
+              <div class="quick-action" onclick="showSection('deals')">
+                <span class="quick-action-icon">🔐</span>
+                <span class="quick-action-label">View Data Room</span>
+                <span class="quick-action-arrow">→</span>
+              </div>
+              <div class="quick-action" onclick="showSection('messages')">
+                <span class="quick-action-icon">💬</span>
+                <span class="quick-action-label">Ask a Question</span>
+                <span class="quick-action-arrow">→</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Deals Section -->
+      <section class="section" id="deals">
+        <h1 class="page-title">Investment Opportunities</h1>
+        <p class="page-subtitle">Review current offerings and access deal materials</p>
+        
+        <div class="deal-card">
+          <div>
+            <div class="deal-header">
+              <span class="deal-name">Industrial Flex - Phoenix</span>
+              <span class="badge badge-green">Open</span>
+            </div>
+            <div class="deal-meta">
+              <span>Type: <span>Industrial</span></span>
+              <span>Target: <span style="color: var(--text-primary);">$12.5M</span></span>
+              <span>Projected IRR: <span style="color: var(--success);">18-22%</span></span>
+              <span>Minimum: <span style="color: var(--text-primary);">$50,000</span></span>
+            </div>
+          </div>
+          <div class="deal-actions">
+            <button class="btn-outline">Data Room</button>
+            <button class="btn">Invest Now</button>
+          </div>
+        </div>
+        
+        <div class="deal-card">
+          <div>
+            <div class="deal-header">
+              <span class="deal-name">Medical Office - Austin</span>
+              <span class="badge badge-green">Open</span>
+            </div>
+            <div class="deal-meta">
+              <span>Type: <span>Medical Office</span></span>
+              <span>Target: <span style="color: var(--text-primary);">$8.2M</span></span>
+              <span>Projected IRR: <span style="color: var(--success);">15-18%</span></span>
+              <span>Minimum: <span style="color: var(--text-primary);">$25,000</span></span>
+            </div>
+          </div>
+          <div class="deal-actions">
+            <button class="btn-outline">Data Room</button>
+            <button class="btn">Invest Now</button>
+          </div>
+        </div>
+        
+        <div class="deal-card">
+          <div>
+            <div class="deal-header">
+              <span class="deal-name">Retail Center - Dallas</span>
+              <span class="badge badge-yellow">Coming Soon</span>
+            </div>
+            <div class="deal-meta">
+              <span>Type: <span>Retail</span></span>
+              <span>Target: <span style="color: var(--text-primary);">$15M</span></span>
+              <span>Projected IRR: <span style="color: var(--success);">16-20%</span></span>
+              <span>Minimum: <span style="color: var(--text-primary);">$100,000</span></span>
+            </div>
+          </div>
+          <div class="deal-actions">
+            <button class="btn-outline" disabled style="opacity: 0.5;">Coming Soon</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Portfolio Section -->
+      <section class="section" id="portfolio">
+        <h1 class="page-title">Your Portfolio</h1>
+        <p class="page-subtitle">Track your investments and performance</p>
+        
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value">2</div>
+            <div class="stat-label">Active Investments</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">$49,500</div>
+            <div class="stat-label">Unrealized Gains</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">$26,750</div>
+            <div class="stat-label">Total Distributions</div>
+          </div>
+        </div>
+        
+        <div class="card">
+          <h3 class="card-title">Investment Details</h3>
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>Invested</th>
+                  <th>Current Value</th>
+                  <th>ROI</th>
+                  <th>Distributions</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Logistics Hub - Atlanta</td>
+                  <td>$150,000</td>
+                  <td>$187,500</td>
+                  <td style="color: var(--success);">+25%</td>
+                  <td>$18,750</td>
+                  <td><span class="badge badge-green">Active</span></td>
+                </tr>
+                <tr>
+                  <td>Office Complex - Denver</td>
+                  <td>$100,000</td>
+                  <td>$112,000</td>
+                  <td style="color: var(--success);">+12%</td>
+                  <td>$8,000</td>
+                  <td><span class="badge badge-green">Active</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Documents Section -->
+      <section class="section" id="documents">
+        <h1 class="page-title">Document Center</h1>
+        <p class="page-subtitle">Upload and manage your investor documents</p>
+        
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-title">Upload Documents</h3>
+            <div class="upload-zone">
+              <div class="upload-icon">📤</div>
+              <div class="upload-text">Drag & drop files here</div>
+              <div class="upload-hint">or click to browse</div>
+            </div>
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 16px;">
+              Accepted: PDF, JPG, PNG, XLSX • Max 25MB
+            </p>
+          </div>
+          
+          <div class="card">
+            <h3 class="card-title">Your Documents</h3>
+            <div class="quick-actions">
+              <div class="quick-action">
+                <span class="quick-action-icon">📄</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 13px;">Accreditation_Letter_2024.pdf</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">01/15/2024</div>
+                </div>
+                <span class="badge badge-green">Verified</span>
+              </div>
+              <div class="quick-action">
+                <span class="quick-action-icon">📄</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 13px;">W9_Form.pdf</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">01/15/2024</div>
+                </div>
+                <span class="badge badge-green">Verified</span>
+              </div>
+              <div class="quick-action">
+                <span class="quick-action-icon">📄</span>
+                <div style="flex: 1;">
+                  <div style="font-size: 13px;">Bank_Statement_Q4.pdf</div>
+                  <div style="font-size: 11px; color: var(--text-muted);">01/10/2024</div>
+                </div>
+                <span class="badge badge-yellow">Pending</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Messages Section -->
+      <section class="section" id="messages">
+        <h1 class="page-title">Messages</h1>
+        <p class="page-subtitle">Communicate with the VCM investment team</p>
+        
+        <div class="card">
+          <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+            <button class="btn" style="flex: 1;">New Message</button>
+            <button class="btn-outline" style="flex: 1;">Schedule Call</button>
+          </div>
+          
+          <div style="border-top: 1px solid var(--border); padding-top: 16px;">
+            <div class="quick-action" style="margin-bottom: 8px;">
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: 13px; font-weight: 500;">VCM Investor Relations</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">2 days ago</span>
+                </div>
+                <div style="font-size: 14px; color: var(--gold); margin-bottom: 4px;">Q4 Distribution Notice</div>
+                <div style="font-size: 12px; color: var(--text-muted);">Your Q4 distribution of $4,687.50 has been processed...</div>
+              </div>
+            </div>
+            <div class="quick-action">
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                  <span style="font-size: 13px; font-weight: 500;">Deal Team</span>
+                  <span style="font-size: 11px; color: var(--text-muted);">1 week ago</span>
+                </div>
+                <div style="font-size: 14px; color: var(--gold); margin-bottom: 4px;">New Opportunity: Medical Office - Austin</div>
+                <div style="font-size: 12px; color: var(--text-muted);">We are excited to share a new investment opportunity...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // Navigation
+    function showSection(sectionId) {
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      // Show selected section
+      document.getElementById(sectionId).classList.add('active');
+      // Update nav buttons
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionId) {
+          btn.classList.add('active');
+        }
+      });
+    }
+
+    // Setup nav button clicks
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.addEventListener('click', () => showSection(btn.dataset.section));
+    });
+
+    // Login handling
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      // In production, this would validate against a backend
+      // For demo, accept any input
+      if (email && password) {
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        
+        // Set user name from email
+        const name = email.split('@')[0];
+        document.getElementById('userName').textContent = name.charAt(0).toUpperCase() + name.slice(1);
+        document.getElementById('userAvatar').textContent = name.substring(0, 2).toUpperCase();
+      } else {
+        alert('Please enter email and password');
+      }
+    }
+
+    function showRegister() {
+      alert('Please contact VCM at investors@vitalcm.com to request access.');
+    }
+
+    // Allow Enter key to submit login
+    document.getElementById('loginPassword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+  </script>
+</body>
+</html>
